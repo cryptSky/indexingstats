@@ -1,0 +1,80 @@
+﻿<div>
+    <input type='text' style="margin-left: 10px"
+           placeholder='Type to search...'
+           id="input-rounded"
+           [ngModel]='val'
+           (ngModelChange)='updateFilter($event)' />
+
+    <ngx-datatable #domainsTable
+               class="material"
+               [rows]="_domains"
+               [columnMode]="'force'"
+               [headerHeight]="30"
+               [footerHeight]="30"
+               [rowHeight]="30"
+               [detailRowHeight]="60"
+               [scrollbarH]="true"
+               [limit]="10">
+        <ngx-datatable-row-detail>
+            <template let-row="row" ngx-datatable-row-detail-template>
+                <div>
+                    <div *ngIf="row.notes">Notes: {{row.notes}}</div>
+                    <div *ngIf="row.tags">Tags: {{row.tags}}</div>
+                </div>
+            </template>
+        </ngx-datatable-row-detail>
+        <ngx-datatable-column [width]="110"
+                          [resizeable]="false"
+                          [sortable]="false"
+                          [draggable]="false"
+                          [canAutoResize]="false"
+                          [frozenLeft]="true"
+                          name="Action">
+            <template let-row="row" ngx-datatable-cell-template>
+                
+                <i class="fa fa-trash"
+                   title="Delete domain"
+                   (click)="toggleDelete(row)">
+                </i>
+                <i [class.ion-eye-disabled]="!row.isDisabled"
+                   [class.ion-eye]="row.isDisabled"
+                   title="Pause/Resume Processing"
+                   (click)="togglePauseResume(row)">
+                </i>
+                <i class="fa fa-line-chart"
+                   title="Show On Graph"
+                   (click)="showOnGraph(row)">
+                </i>
+                <i class="fa fa-refresh" 
+                   title="Run Now"
+                   (click)="runNow(row)">
+
+                </i>
+                <i [class.fa-caret-right]="!row.$$expanded"
+                   [class.fa-caret-down]="row.$$expanded"
+                   class="fa"
+                   title="Expand/Collapse Row"
+                   (click)="toggleExpandRow(row)">
+                </i>
+
+            </template>
+        </ngx-datatable-column>
+        
+        <ngx-datatable-column name="Domain"
+                          [draggable]="false" 
+                          [frozenLeft]="true"
+                          width="200">
+            <template let-row="row" ngx-datatable-cell-template>
+                
+                <div>{{row.url}}</div>
+            </template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column *ngFor="let pdate of (_dateRange | datesInRange)" [name]="pdate | date:'dd/MM/yyyy'">
+            <template let-row="row" ngx-datatable-cell-template>
+                <div>{{row | domainStats: pdate}}</div>
+            </template>
+        </ngx-datatable-column>        
+
+    </ngx-datatable>
+</div>

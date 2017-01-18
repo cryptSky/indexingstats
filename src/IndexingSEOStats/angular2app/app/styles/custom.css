@@ -1,0 +1,24 @@
+﻿
+.datatable {
+	text-align: left;
+	width:auto;
+	margin:10px;
+    height:auto;
+}
+.datatable.vertical-scroll {
+  height:70vh;
+}
+
+.amcharts-chart-div a {display:none !important;}
+
+i {
+    cursor: pointer;
+}
+
+textarea {
+    resize: none;
+    white-space: nowrap; /* will prevent the default wrapping of text to next line */
+    overflow-x: auto; /* will make horizontal scroll-bar appear only when needed */
+    width: 300px;
+    height: 75px;
+}

@@ -1,0 +1,20 @@
+﻿<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown"><i class="fa fa-bell"></i>
+            <span *ngIf="_deindexedDomains.length" class="badge badge-danger pull-right">{{_deindexedDomains.length}}</span></a>
+        <ul class="dropdown-menu title-caret dropdown-lg" role="menu">
+            <li><p class="drop-title">You have {{_deindexedDomains.length}} notifications !</p></li>
+            <li class="dropdown-menu-list slimscroll tasks">
+                <ul class="list-unstyled">
+                    <li *ngFor="let domain of _deindexedDomains">
+                        <a href="javascript:void(0);" (click)="toggleDelete(domain)">
+                            <div class="task-icon badge badge-danger"><i class="icon-energy"></i></div>
+                            <p class="task-details">{{domain | notification}}</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="drop-all"><a href="javascript:void(0);" class="text-center" (click)="toggleDeleteAll()">Clear All</a></li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,7 @@
+{
+  "globalDependencies": {
+    "amcharts": "registry:dt/amcharts#0.0.0+20160909114300",
+    "jquery": "registry:dt/jquery",
+    "signalr": "registry:dt/signalr"
+  }
+}

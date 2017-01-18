@@ -1,0 +1,32 @@
+﻿
+<form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)" class="form-vertical">
+
+            <div class="form-group">
+                <div class="col-md-3">
+          
+                    <textarea type="text" formControlName="url" name="url" id="input-placeholder" required placeholder="Urls - each row is separate url">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <textarea type="text" formControlName="notes" name="notes" id="input-placeholder" placeholder="Notes - each row corresponds to url">
+                    </textarea>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-md-3">
+                    <textarea formControlName="tags" id="tags" name="tags" placeholder="Tags - each row corresponds to url">
+                    </textarea>
+                </div>
+            </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+
+
+</form>

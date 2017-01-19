@@ -152,6 +152,23 @@ namespace IndexingSEOStats.Data.Repositories
             
         }
 
+        public async Task<ReplaceOneResult> SaveDomainAsync(Domain doc)
+        {
+            return await Collection.ReplaceOneAsync(w => w.Url.Equals(doc.Url), doc, new UpdateOptions { IsUpsert = true });
+        }
+
+        public async Task<Domain> UpdateDomainAsync(Domain domain)
+        {
+            var filter = Builders<Domain>.Filter.Where(q => q.Url.Equals(domain.Url));
+            var result = await Collection.FindOneAndReplaceAsync(filter, domain, new FindOneAndReplaceOptions<Domain, Domain>
+            {
+                ReturnDocument = ReturnDocument.After
+            }
+            );
+
+            return result;
+        }
+
         public Domain UpdateDomain(Domain domain)
         {
             var filter = Builders<Domain>.Filter.Where(q => q.Url.Equals(domain.Url));

@@ -58,8 +58,6 @@ var DomainsTableComponent = (function () {
         console.log('Selection!', selected);
     };
     DomainsTableComponent.prototype.toggleExpandRow = function (row) {
-        console.log('Toggled Expand Row!', row);
-        // TODO: Hookup async update example using fetchUser
         this.table.toggleExpandRow(row);
     };
     DomainsTableComponent.prototype.paged = function (event) {

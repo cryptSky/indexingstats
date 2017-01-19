@@ -50,16 +50,13 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
                 this._selectedDomain = url.replace(/^https?\:\/\//i, "").replace(/\/$/, "");
                 var elementPos = this.chart.dataSets.map(function(x) {return x.title; }).indexOf(this._selectedDomain);
 
-                //let dataSelectorElem = this._renderer.selectRootElement('.amcharts-data-set-select');
-                //this._renderer.setElementProperty(dataSelectorElem, "value", this._selectedDomain);
-                
-                //this._renderer.setElementProperty(dataSelectorElem, "selectedIndex", elementPos);
-                
-                //this._renderer.invokeElementMethod(this._elem, "change", []);
-            }
+                let dataSelectorElem = this._elem.nativeElement.querySelector('.amcharts-data-set-select');
+                this._renderer.setElementProperty(dataSelectorElem, "selectedIndex", elementPos);
 
-            //var selectEl = $(".amChartsDataSetSelector").find("select").val(elementPos).get(0);
-            //this.fireEvent.call(selectEl, 'change');
+                let event = new CustomEvent('change', { bubbles: true});
+                this._renderer.invokeElementMethod(dataSelectorElem, 'dispatchEvent', [event]);
+
+            }
             
         });
         
@@ -244,26 +241,4 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
         this.chart.animateAgain();
 
     }
-
-   /*fireEvent(eventName) {
-        var event; // The custom event that will be created
-    
-        if (document.createEvent) {
-            event = document.createEvent("HTMLEvents");
-            event.initEvent(eventName, true, true);
-        } else {
-            event = document.createEventObject();
-            event.eventType = eventName;
-        }
-    
-        event.eventName = eventName;
-    
-        if (document.createEvent) {
-            this.dispatchEvent(event);
-        } else {
-            this.fireEvent("on" + event.eventType, event);
-        }
-    }*/
-
-    
- }
+}

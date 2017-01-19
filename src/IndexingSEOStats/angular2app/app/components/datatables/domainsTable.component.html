@@ -36,8 +36,9 @@
                    title="Delete domain"
                    (click)="toggleDelete(row)">
                 </i>
-                <i [class.ion-eye-disabled]="!row.isDisabled"
-                   [class.ion-eye]="row.isDisabled"
+                <i [class.fa-pause-circle-o]="!row.isDisabled"
+                   [class.fa-play-circle-o]="row.isDisabled"
+                   class="fa"
                    title="Pause/Resume Processing"
                    (click)="togglePauseResume(row)">
                 </i>

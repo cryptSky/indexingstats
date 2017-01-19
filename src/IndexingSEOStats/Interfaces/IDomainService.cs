@@ -19,9 +19,9 @@ namespace IndexingSEOStats.Interfaces
         Task<IList<DomainDTO>> GetDeindexedDomainsAsync();
         Task<IList<DomainDTO>> GetDomainsWithStatsForPeriodAsync(DateRange range);
         Task<IList<IndexingData>> GetStatsForPeriodAsync(DomainDTO domain, DateRange range);
-        Task<DomainDTO> PauseProcessingAsync(DomainDTO domainDTO);
         Task DeleteDomainAsync(DomainDTO domainDTO);
         DomainDTO UpdateDomain(DomainDTO domainDTO);
+        Task<DomainDTO> UpdateDomainAsync(DomainDTO domainDTO);
         
     }
 }

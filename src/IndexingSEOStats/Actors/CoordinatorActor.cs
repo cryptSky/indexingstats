@@ -20,11 +20,11 @@ namespace IndexingSEOStats.Actors
 
         private void HandleSchedule(object message)
         {
-            // ActorSystemRefs.ActorSystem.Scheduler.ScheduleTellOnce
-            //       (TimeSpan.Zero, SystemActors.RequestSchedulerActor, "scheduleToday", ActorRefs.Nobody);
+            ActorSystemRefs.ActorSystem.Scheduler.ScheduleTellOnce
+                   (TimeSpan.Zero, _requestSchedulerActor, "scheduleToday", ActorRefs.Nobody);
 
             ActorSystemRefs.ActorSystem.Scheduler.ScheduleTellRepeatedly
-                   (TimeSpan.Zero, TimeSpan.FromMinutes(15), _requestSchedulerActor, "scheduleToday", ActorRefs.Nobody);
+                   (TimeSpan.Zero, TimeSpan.FromHours(24), _requestSchedulerActor, "schedule", ActorRefs.Nobody);
         }
     }
 }

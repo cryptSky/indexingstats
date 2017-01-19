@@ -84,15 +84,6 @@ namespace IndexingSEOStats.Services
             _uow.DomainRepository.UpdateCurrentStats(domainUrl, data);
         }
 
-        public async Task<DomainDTO> PauseProcessingAsync(DomainDTO domainDTO)
-        {
-            domainDTO.IsDisabled = !domainDTO.IsDisabled;
-            var domain = _mapper.Map<DomainDTO, Domain>(domainDTO);
-            
-            await _uow.DomainRepository.SaveAsync(domain);
-            return domainDTO;
-        }
-
         public async Task<IList<DomainDTO>> GetDomainsWithStatsForPeriodAsync(DateRange range)
         {
             var result = await _uow.DomainRepository.GetDomainsWithStatsForPeriodAsync(range);
@@ -130,6 +121,14 @@ namespace IndexingSEOStats.Services
         {
             var domain = _mapper.Map<DomainDTO, Domain>(domainDTO);
             var result = _uow.DomainRepository.UpdateDomain(domain);
+
+            return _mapper.Map<Domain, DomainDTO>(result);
+        }
+
+        public async Task<DomainDTO> UpdateDomainAsync(DomainDTO domainDTO)
+        {
+            var domain = _mapper.Map<DomainDTO, Domain>(domainDTO);
+            var result = await _uow.DomainRepository.UpdateDomainAsync(domain);
 
             return _mapper.Map<Domain, DomainDTO>(result);
         }

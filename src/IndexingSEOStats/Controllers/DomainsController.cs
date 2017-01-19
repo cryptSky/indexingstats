@@ -47,8 +47,9 @@ namespace IndexingSEOStats.Controllers
         [ActionName("pause")]
         public async Task<IActionResult> Pause([FromBody]DomainDTO domainDTO)
         {
-            await _domainService.PauseProcessingAsync(domainDTO);
-            return Ok(domainDTO);
+            domainDTO.IsDisabled = !domainDTO.IsDisabled;
+            var result = await _domainService.UpdateDomainAsync(domainDTO);
+            return Ok(result);
         }
 
         [HttpPost]

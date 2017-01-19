@@ -111,8 +111,8 @@ namespace IndexingSEOStats
                 .SingleInstance();
             builder.RegisterType<TimeGeneratorService>().As<ITimeGeneratorService>()
                 .SingleInstance()
-                .WithParameter("startTime", TimeSpan.FromMinutes(1).TotalSeconds)
-                .WithParameter("timePeriodSec", TimeSpan.FromMinutes(15).TotalSeconds)
+                //.WithParameter("startTime", TimeSpan.FromMinutes(1).TotalSeconds)
+                //.WithParameter("timePeriodSec", TimeSpan.FromMinutes(15).TotalSeconds)
                 ;
 
             builder.RegisterType<DomainProcessorActor>();

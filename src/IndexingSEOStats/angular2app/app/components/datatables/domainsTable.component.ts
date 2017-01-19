@@ -82,8 +82,6 @@ export class DomainsTableComponent implements OnInit, OnDestroy {
   }
 
   toggleExpandRow(row) {
-    console.log('Toggled Expand Row!', row);
-    // TODO: Hookup async update example using fetchUser
     this.table.toggleExpandRow(row);
   }
 

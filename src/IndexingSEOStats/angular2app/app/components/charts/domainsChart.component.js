@@ -36,9 +36,11 @@ var DomainsChartComponent = (function () {
             if (url != "") {
                 _this._selectedDomain = url.replace(/^https?\:\/\//i, "").replace(/\/$/, "");
                 var elementPos = _this.chart.dataSets.map(function (x) { return x.title; }).indexOf(_this._selectedDomain);
+                var dataSelectorElem = _this._elem.nativeElement.querySelector('.amcharts-data-set-select');
+                _this._renderer.setElementProperty(dataSelectorElem, "selectedIndex", elementPos);
+                var event_1 = new CustomEvent('change', { bubbles: true });
+                _this._renderer.invokeElementMethod(dataSelectorElem, 'dispatchEvent', [event_1]);
             }
-            //var selectEl = $(".amChartsDataSetSelector").find("select").val(elementPos).get(0);
-            //this.fireEvent.call(selectEl, 'change');
         });
     };
     DomainsChartComponent.prototype.ngOnInit = function () {

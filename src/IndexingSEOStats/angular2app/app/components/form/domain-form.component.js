@@ -11,38 +11,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var domain_service_1 = require('../../services/domain.service');
 var core_1 = require('@angular/core');
 var domain_interface_1 = require('../../interfaces/domain.interface');
-var forms_1 = require('@angular/forms');
 var DomainFormComponent = (function () {
-    function DomainFormComponent(_domainService, _fb) {
+    function DomainFormComponent(_domainService) {
         this._domainService = _domainService;
-        this._fb = _fb;
-        this.events = []; // use later to display form changes
+        this.domain = {
+            url: '',
+            notes: '',
+            tags: ''
+        };
         this.options = {
             readonly: undefined,
             placeholder: '+ Tag'
         };
     }
     DomainFormComponent.prototype.ngOnInit = function () {
-        this.createForm();
     };
-    DomainFormComponent.prototype.createForm = function () {
-        // the short way
-        this.myForm = this._fb.group({
-            url: ['', [forms_1.Validators.required]],
-            notes: [''],
-            tags: ['']
-        });
-    };
-    DomainFormComponent.prototype.reset = function () {
-        this.createForm();
-    };
-    DomainFormComponent.prototype.save = function (formModel, isValid) {
+    DomainFormComponent.prototype.save = function (form, formModel, isValid) {
         this.submitted = true; // set form submit to true
         // check if model is valid
         // if valid, call API to save customer
-        var tags = formModel.tags.split('\n');
-        var urls = formModel.url.split('\n');
-        var notes = formModel.notes.split('\n');
+        var tags = this.domain.tags.split(/[\n]/).filter(function (v) { return v.trim() != ''; });
+        ;
+        var urls = this.domain.url.split(/[ ,;\n]/).filter(function (v) { return v.trim() != ''; });
+        ;
+        var notes = this.domain.notes.split(/[\n]/).filter(function (v) { return v.trim() != ''; });
+        ;
         if (isValid) {
             for (var index = 0; index < urls.length; index++) {
                 var domain = new domain_interface_1.Domain('', '', '', [], false, false);
@@ -51,7 +44,7 @@ var DomainFormComponent = (function () {
                 domain.notes = notes[index] ? notes[index].trim() : '';
                 this._domainService.createDomain(domain);
             }
-            this.reset();
+            form.reset();
         }
     };
     DomainFormComponent.prototype.onAdd = function (item) {
@@ -71,7 +64,7 @@ var DomainFormComponent = (function () {
             selector: 'domain-form',
             template: require('./domain-form.component.html')
         }), 
-        __metadata('design:paramtypes', [domain_service_1.DomainService, forms_1.FormBuilder])
+        __metadata('design:paramtypes', [domain_service_1.DomainService])
     ], DomainFormComponent);
     return DomainFormComponent;
 }());

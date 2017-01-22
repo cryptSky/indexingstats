@@ -1,5 +1,5 @@
 ﻿import { DomainService } from '../../services/domain.service';
-import { OnInit, OnDestroy, Component, NgModule,ViewEncapsulation } from '@angular/core';
+import { OnInit, OnDestroy, Component, NgModule,ViewEncapsulation, Renderer } from '@angular/core';
 import { Domain } from '../../interfaces/domain.interface';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
@@ -11,40 +11,29 @@ import { Subscription } from 'rxjs/Subscription';
 
 export class DomainFormComponent implements OnInit {
 
-    public myForm: FormGroup; // our model driven form
     public submitted: boolean; // keep track on whether form is submitted
-    public events: any[] = []; // use later to display form changes
+    public domain = {
+        url: '',
+        notes: '',
+        tags: ''
+    };   
     
-    constructor(private _domainService: DomainService, private _fb: FormBuilder) {
+    constructor(private _domainService: DomainService) {
         
     }
 
     ngOnInit() {
-        this.createForm();       
+         
     }
 
-    private createForm() {
-        // the short way
-        this.myForm = this._fb.group({
-                url: ['', [<any>Validators.required]],
-                notes: [''],
-                tags: [''] 
-           });
-      
-    }
-
-    reset() {
-        this.createForm();
-    }
-
-    save(formModel: any, isValid: boolean) {
+    save(form: any, formModel: any, isValid: boolean) {
         this.submitted = true; // set form submit to true
 
         // check if model is valid
         // if valid, call API to save customer
-        let tags = formModel.tags.split('\n');
-        let urls = formModel.url.split('\n');
-        let notes = formModel.notes.split('\n');
+        let tags = this.domain.tags.split(/[\n]/).filter(v=> v.trim() != '');;
+        let urls = this.domain.url.split(/[ ,;\n]/).filter(v=> v.trim() != '');;
+        let notes = this.domain.notes.split(/[\n]/).filter(v=> v.trim() != '');;
 
         if (isValid) {
             for (var index = 0; index < urls.length; index++) {
@@ -56,7 +45,7 @@ export class DomainFormComponent implements OnInit {
                 this._domainService.createDomain(domain);
             }
 
-            this.reset();
+            form.reset();
         }
     }
 

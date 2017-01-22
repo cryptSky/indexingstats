@@ -26,6 +26,7 @@ import { DomainService } from './services/domain.service';
 import { NotificationService } from './services/notification.service';
 import { SignalRService } from './services/signalr.service';
 import { DatesProviderService } from './services/dates-provider.service';
+import { NewLineDirective } from './directives/newline.directive';
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -39,7 +40,8 @@ import { DatesProviderService } from './services/dates-provider.service';
         DomainStatisticsPipe,
         DatesInRangePipe,
         NotificationMessagePipe,
-        CommasPipe
+        CommasPipe,
+        NewLineDirective
     ],
     imports: [
         BrowserModule,

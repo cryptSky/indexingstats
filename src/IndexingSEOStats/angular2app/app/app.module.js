@@ -29,6 +29,7 @@ var domain_service_1 = require('./services/domain.service');
 var notification_service_1 = require('./services/notification.service');
 var signalr_service_1 = require('./services/signalr.service');
 var dates_provider_service_1 = require('./services/dates-provider.service');
+var newline_directive_1 = require('./directives/newline.directive');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -45,7 +46,8 @@ var AppModule = (function () {
                 domain_statistics_pipe_1.DomainStatisticsPipe,
                 dates_in_range_pipe_1.DatesInRangePipe,
                 notification_message_pipe_1.NotificationMessagePipe,
-                commas_pipe_1.CommasPipe
+                commas_pipe_1.CommasPipe,
+                newline_directive_1.NewLineDirective
             ],
             imports: [
                 platform_browser_1.BrowserModule,

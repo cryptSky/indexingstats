@@ -22,18 +22,15 @@ namespace IndexingSEOStats.Services
             _defaultStartTime = startTime;
         }
 
-        public DateTime Next(int periodsNumber, bool today = false)
+        public DateTime Next(int periodsNumber)
         {
-            var _current = _currentIndex * (_timePeriodSec - _startTime) / (periodsNumber + 1) + _startTime;
+            var dateTime = DateTime.Now;
+            var timePeriodSec = (int)(DateTime.Today.Add(TimeSpan.FromDays(1)).Date - dateTime).TotalSeconds;
+            
+            var _current = _currentIndex * (timePeriodSec - _startTime) / (periodsNumber + 1) + _startTime;
             var time = TimeSpan.FromSeconds(_current);
             _currentIndex++;
-
-            var dateTime = DateTime.Now;
-            if (!today)
-            {
-                dateTime = DateTime.Today.Add(TimeSpan.FromDays(1)).Date;
-            }
-                       
+            
             dateTime += time;
             return dateTime;
         }

@@ -80,7 +80,7 @@ namespace IndexingSEOStats.Controllers
         [ActionName("process")]
         public async Task<IActionResult> Process([FromBody]DomainDTO domainDTO)
         {
-            var result = await SystemActors.DomainProcessorActor.Ask<DomainDTO>(domainDTO.Url, TimeSpan.FromSeconds(60));
+            var result = await SystemActors.DomainProcessorActor.Ask<DomainDTO>(domainDTO, TimeSpan.FromSeconds(60));
             return Json(result);
         }
 

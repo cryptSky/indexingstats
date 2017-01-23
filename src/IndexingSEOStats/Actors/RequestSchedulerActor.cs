@@ -52,19 +52,19 @@ namespace IndexingSEOStats.Actors
         {
             _logger.Information("Received scheduling request for not yet tracked domains today...");
             var domains = _domainService.GetActiveDomains();
-            //domains = domains.Where(d => !d.IndexingStats.Any(st => 
-            //    st.ProcessingDate.Date.Equals(DateTime.Today.Date))).ToList();
+            domains = domains.Where(d => !d.IndexingStats.Any(st => 
+                st.ProcessingDate.Date.Equals(DateTime.Today.Date))).ToList();
 
-            Schedule(domains, true);
+            Schedule(domains);
 
             _logger.Information("Scheduling is finished!");
         }
 
-        private void Schedule(IList<DomainDTO> domains, bool today = false)
+        private void Schedule(IList<DomainDTO> domains)
         {
             foreach (var domain in domains)
             {
-                var time = _timeGenerator.Next(domains.Count, today);
+                var time = _timeGenerator.Next(domains.Count);
                 var fromNow = time - DateTime.Now;
                 ActorSystemRefs.ActorSystem.Scheduler.ScheduleTellOnce
                     (fromNow, _domainProcessorActor, domain.Url, Self);

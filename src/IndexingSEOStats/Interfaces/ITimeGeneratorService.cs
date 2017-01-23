@@ -7,7 +7,7 @@ namespace IndexingSEOStats.Interfaces
 {
     public interface ITimeGeneratorService
     {
-        DateTime Next(int periodsNumber, bool today);
+        DateTime Next(int periodsNumber);
         void Reset();
         
     }

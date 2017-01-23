@@ -26,8 +26,9 @@ namespace IndexingSEOStats.Actors
             //ActorSystemRefs.ActorSystem.Scheduler.ScheduleTellRepeatedly
             //       (TimeSpan.Zero, TimeSpan.FromMinutes(15), _requestSchedulerActor, "scheduleToday", ActorRefs.Nobody);
 
+            var zeroAM = DateTime.Today.Add(TimeSpan.FromDays(1)).Date - DateTime.Now;
             ActorSystemRefs.ActorSystem.Scheduler.ScheduleTellRepeatedly
-                   (TimeSpan.Zero, TimeSpan.FromHours(24), _requestSchedulerActor, "schedule", ActorRefs.Nobody);
+                   (zeroAM, TimeSpan.FromHours(24), _requestSchedulerActor, "schedule", ActorRefs.Nobody);
         }
     }
 }

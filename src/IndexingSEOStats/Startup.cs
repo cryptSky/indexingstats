@@ -25,6 +25,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using Serilog.Sinks.RollingFile;
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
@@ -53,12 +54,13 @@ namespace IndexingSEOStats
 
             ActorSystemRefs.ActorSystem = ActorSystem.Create("DomainProcessingSystem");
 
-            string logPathFormat = Path.Combine(env.ContentRootPath, @"..\logs\log-{Date}.txt");
+            string logPathFormat = Path.Combine(env.ContentRootPath, @"\logs\log-{Date}.txt");
 
 #if DEBUG
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger();            
+             .MinimumLevel.Debug()
+             .WriteTo.RollingFile(logPathFormat)
+             .CreateLogger();
 #else
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()

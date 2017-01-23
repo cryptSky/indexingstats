@@ -48,10 +48,9 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg|gif|ico)$/,
-                loader: "file-loader?name=assets/[name]-[hash:6].[ext]",
+                loader: "file-loader?name=assets/[name]-[hash:6].[ext]"
             },
-
-			{
+            {
 			    test: /\.component\.css$/,
 			    loader: 'raw'
 			},
@@ -65,10 +64,9 @@ module.exports = {
             {
                 test: /\.scss$/,
                 loaders: ['raw', 'sass']
-            },
+            }
 
-
-        ],
+        ]
 
     },
 

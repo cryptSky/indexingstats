@@ -1,5 +1,5 @@
 {
-  "name": "Angular2Spa",
+  "name": "indexingstats",
   "version": "1.0.0",
   "scripts": {
     "start": "tsc && npm install && npm run build && \"dotnet run\" ",

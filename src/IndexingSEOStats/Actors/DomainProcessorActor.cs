@@ -47,6 +47,8 @@ namespace IndexingSEOStats.Actors
 
         private void HandleDomainStat(DomainStat domainStat)
         {
+            _logger.Information($"Currently {domainStat.IndexingData.PagesNumber} pages indexed for the domain {domainStat.DomainURL}");
+
             var domain = _domainService.GetDomainByUrl(domainStat.DomainURL);
             var hasCurrentDateStats = domain.IndexingStats.Where(st => st.ProcessingDate.Date.Equals(domainStat.IndexingData.ProcessingDate.Date)).Count() != 0;
             if (hasCurrentDateStats)
@@ -68,10 +70,13 @@ namespace IndexingSEOStats.Actors
             
             var result = _domainService.UpdateDomain(domain);
             _hub.SendDomain(result);
+
+            _logger.Information($"Finished processing of the domain {domainStat.DomainURL}");
         }
 
         private void HandleParseDomain(string domainUrl)
         {
+            _logger.Information($"Starting processing of the domain {domainUrl}");
             _domainParserActor.Tell(domainUrl, Self);
         }
 

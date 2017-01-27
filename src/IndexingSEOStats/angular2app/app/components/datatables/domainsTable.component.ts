@@ -98,6 +98,30 @@ export class DomainsTableComponent implements OnInit, OnDestroy {
     this._domains[row.$$index][cell] = event.target.value;
   }
 
+  cellClass(row: Domain, pdate: Date): string {
+    let style = '';
+    
+    let prevDate = new Date();
+    prevDate.setDate(pdate.getDate() - 1);
+    
+    let prevDomainStats = this._datesProvider.getStatForDate(row, prevDate);
+    let currentDomainStats = this._datesProvider.getStatForDate(row, pdate);
+
+    if (currentDomainStats != 'N/A' && prevDomainStats != 'N/A') {
+        let prevStat = parseInt(prevDomainStats.replace(/,/g, ''), 10);
+        let currentStat = parseInt(currentDomainStats.replace(/,/g, ''), 10);    
+
+        if (currentStat > prevStat) {
+            style = 'greater-stat';
+        } else if (currentStat < prevStat) {
+            style = 'less-stat';
+        }
+    }
+
+    return style;
+    
+  }
+
   showOnGraph(row) {
     this._domainService.selectToDraw(row);   
     

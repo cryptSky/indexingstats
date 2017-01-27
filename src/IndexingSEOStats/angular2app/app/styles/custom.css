@@ -9,6 +9,14 @@
   height:70vh;
 }
 
+.less-stat {
+    background-color: lightcoral;
+}
+
+.greater-stat {
+    background-color: lightgreen;
+}
+
 .amcharts-chart-div a {display:none !important;}
 
 i {

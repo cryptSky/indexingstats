@@ -71,6 +71,24 @@ var DomainsTableComponent = (function () {
         console.log('ev', event);
         this._domains[row.$$index][cell] = event.target.value;
     };
+    DomainsTableComponent.prototype.cellClass = function (row, pdate) {
+        var style = '';
+        var prevDate = new Date();
+        prevDate.setDate(pdate.getDate() - 1);
+        var prevDomainStats = this._datesProvider.getStatForDate(row, prevDate);
+        var currentDomainStats = this._datesProvider.getStatForDate(row, pdate);
+        if (currentDomainStats != 'N/A' && prevDomainStats != 'N/A') {
+            var prevStat = parseInt(prevDomainStats.replace(/,/g, ''), 10);
+            var currentStat = parseInt(currentDomainStats.replace(/,/g, ''), 10);
+            if (currentStat > prevStat) {
+                style = 'greater-stat';
+            }
+            else if (currentStat < prevStat) {
+                style = 'less-stat';
+            }
+        }
+        return style;
+    };
     DomainsTableComponent.prototype.showOnGraph = function (row) {
         this._domainService.selectToDraw(row);
     };

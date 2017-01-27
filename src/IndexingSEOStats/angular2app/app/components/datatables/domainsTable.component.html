@@ -72,8 +72,10 @@
         </ngx-datatable-column>
 
         <ngx-datatable-column *ngFor="let pdate of (_dateRange | datesInRange)" [name]="pdate | date:'dd/MM/yyyy'">
-            <template let-row="row" ngx-datatable-cell-template>
-                <div>{{row | domainStats: pdate}}</div>
+            <template let-row="row"ngx-datatable-cell-template>
+                <div [ngClass]="cellClass(row, pdate)">
+                    <div>{{row | domainStats: pdate}}</div>
+                </div>                
             </template>
         </ngx-datatable-column>        
 

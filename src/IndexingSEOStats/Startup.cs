@@ -91,7 +91,10 @@ namespace IndexingSEOStats
 
                 });
 
-            services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
+            services.AddSignalR(options => {
+                options.Hubs.EnableDetailedErrors = true;
+                //options.Hubs.EnableJavaScriptProxies = false;
+                });
 
             var builder = new ContainerBuilder();
 

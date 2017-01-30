@@ -43,59 +43,75 @@ namespace IndexingSEOStats.Actors
             var errorMessage = string.Format("Failed to get indexing data for the domain {0} with error message: {1}", error.DomainURL, error.ErrorMessage);
             _logger.Error(errorMessage);
 
+            var domain = _domainService.GetDomainByUrl(error.DomainURL);
+
+            Sender.Tell(domain, Self);
+
         }
 
         private void HandleDomainStat(DomainStat domainStat)
         {
-            _logger.Information($"Currently {domainStat.IndexingData.PagesNumber} pages indexed for the domain {domainStat.DomainURL}");
+            try
+            {
+                _logger.Information($"Currently {domainStat.IndexingData.PagesNumber} pages indexed for the domain {domainStat.DomainURL}");
 
-            var domain = _domainService.GetDomainByUrl(domainStat.DomainURL);
+                var domain = _domainService.GetDomainByUrl(domainStat.DomainURL);
+                var result = ProcessDomainWithStat(domain, domainStat);
+
+                _hub.SendDomain(result);
+                _logger.Information($"Finished processing of the domain {domainStat.DomainURL}");
+            }
+            catch(Exception ex)
+            {
+                _logger.Error($"Error happened while processing the domain: {ex.Message}");
+                throw;
+            }
+        }
+
+        private DomainDTO ProcessDomainWithStat(DomainDTO domain, DomainStat domainStat)
+        {
             var hasCurrentDateStats = domain.IndexingStats.Where(st => st.ProcessingDate.Date.Equals(domainStat.IndexingData.ProcessingDate.Date)).Count() != 0;
             if (hasCurrentDateStats)
             {
-                //_domainService.UpdateCurrentStats(domainStat.DomainURL, domainStat.IndexingData);
                 domain.IndexingStats.RemoveAt(domain.IndexingStats.Count - 1);
                 domain.IndexingStats.Add(domainStat.IndexingData);
             }
             else
             {
-                //_domainService.AddIndexingData(domainStat.DomainURL, domainStat.IndexingData);
                 domain.IndexingStats.Add(domainStat.IndexingData);
             }
-
             if (domainStat.IndexingData.PagesNumber == 0 || (domainStat.IndexingData.PagesNumber != 0 && domain.IsDeindexed == true))
             {
-                domain.IsDeindexed = !domain.IsDeindexed;                
+                domain.IsDeindexed = !domain.IsDeindexed;
             }
-            
             var result = _domainService.UpdateDomain(domain);
-            _hub.SendDomain(result);
 
-            _logger.Information($"Finished processing of the domain {domainStat.DomainURL}");
+            return result;
         }
 
         private void HandleParseDomain(string domainUrl)
         {
             _logger.Information($"Starting processing of the domain {domainUrl}");
-            _domainParserActor.Tell(domainUrl, Self);
+
+            var parserInput = new ParserInput { Url = domainUrl, UseProxy = true };
+            _domainParserActor.Tell(parserInput, Self);
         }
 
         private async Task HandleParseDomainAsync(DomainDTO domain)
         {
-            var parsingJob = await _domainParserActor.Ask<DomainStat>(domain.Url).ContinueWith(async domainStat => {
-                domain.IndexingStats.Add(domainStat.Result.IndexingData);
-                await _domainService.AddDomainAsync(domain).ContinueWith(res =>
-                        {
-                            Sender.Tell(res.Result, Self);
-                        });                    
-                });               
+            var parserInput = new ParserInput { Url = domain.Url, UseProxy = false };
+            await _domainParserActor.Ask<DomainStat>(parserInput).ContinueWith(domainStat =>
+            {
+                var result = ProcessDomainWithStat(domain, domainStat.Result);
+                Sender.Tell(result, Self);
+            });
         }
 
         protected override SupervisorStrategy SupervisorStrategy()
         {
             return new OneForOneStrategy(// or AllForOneStrategy
-                maxNrOfRetries: 10,
-                withinTimeRange: TimeSpan.FromMinutes(10),
+                maxNrOfRetries: 5,
+                withinTimeRange: TimeSpan.FromMinutes(120),
                 decider: Decider.From(x =>
                 {
                     // Maybe ArithmeticException is not application critical

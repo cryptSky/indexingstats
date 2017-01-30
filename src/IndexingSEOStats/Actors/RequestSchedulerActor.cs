@@ -30,13 +30,16 @@ namespace IndexingSEOStats.Actors
 
             Receive<string>(m => m.Equals("schedule"), m => HandleScheduling(m));
             Receive<string>(m => m.Equals("scheduleToday"), m => HandleTodaysScheduling(m));
-            Receive<DomainDTO>(m => FinishDomainProcessing(m));
+            Receive<DomainDTO>(m => RescheduleDomain(m));
         }
 
-        private void FinishDomainProcessing(DomainDTO domainDto)
+        private void RescheduleDomain(DomainDTO domainDto)
         {
-            var lastStats = domainDto.IndexingStats.Last();
-            _logger.Information("Last stats for " + domainDto.Url + " : " + lastStats.ToString());
+            _logger.Information($"Failed processing of the domain {domainDto.Url}! Recheduling processing time for that domain...");
+
+            Schedule(new[] { domainDto });
+
+            _logger.Information("Rescheduling finished!");
         }
 
         private void HandleScheduling(string message)
@@ -74,5 +77,7 @@ namespace IndexingSEOStats.Actors
 
             _timeGenerator.Reset();
         }
+        
+
     }
 }

@@ -29,6 +29,12 @@ namespace IndexingSEOStats.Actors
             public string ErrorMessage { get; set; }
         }
 
+        public class ParserInput
+        {
+            public string Url { get; set; }
+            public bool UseProxy { get; set; }
+        }
+
         #endregion
 
         private const string GoogleSearchUrl = "https://www.google.com/search?q=site:{0}&start=0";
@@ -38,7 +44,7 @@ namespace IndexingSEOStats.Actors
         {
             _proxyProvider = proxyProvider;
 
-            Receive<string>(domainUrl => HandleDomainUrl(domainUrl));
+            Receive<ParserInput>(domainUrl => HandleDomainUrl(domainUrl));
             //ReceiveAsync<DomainDTO>(async domain => await HandleDomainAsync(domain));
             
         }
@@ -47,18 +53,32 @@ namespace IndexingSEOStats.Actors
             // put message back in mailbox for re-processing after restart
             if (message != null)
             {
-                Self.Tell(message);
+                //if (reason.Message.Contains("(403) Forbidden") || reason.Message.Contains("(503)"))
+                //{
+                //    var errorMessage = "Proxy server is not responding!";
+                //    var parsingError = new ParsingError { DomainURL = ((ParserInput)message).Url, ErrorMessage = errorMessage };
+                //    Sender.Tell(parsingError, Self);
+                //}
+                //else
+                {
+                    Self.Tell(message);
+                }
+                
             }
             
         }
 
-        private void HandleDomainUrl(string domainUrl)
+        private void HandleDomainUrl(ParserInput message)
         {
             IndexingData indexingData = null; 
             using (var webClient = new WebClient())
             {
-                webClient.Proxy = _proxyProvider.GetProxy();
-                var url = _proxyProvider.GetRequestUrl(string.Format(GoogleSearchUrl, domainUrl));
+                if (message.UseProxy)
+                {
+                    webClient.Proxy = _proxyProvider.GetProxy();
+                }
+                
+                var url = _proxyProvider.GetRequestUrl(string.Format(GoogleSearchUrl, message.Url));
 
                 webClient.Headers.Add("Accept-Language", "en-US");
 
@@ -76,7 +96,7 @@ namespace IndexingSEOStats.Actors
                         ProcessingDate = DateTime.Now.Date
                     };
 
-                    var domainStat = new DomainStat { DomainURL = domainUrl, IndexingData = indexingData };
+                    var domainStat = new DomainStat { DomainURL = message.Url, IndexingData = indexingData };
 
                     Sender.Tell(domainStat, Self);
                     return;
@@ -84,12 +104,16 @@ namespace IndexingSEOStats.Actors
 
                 var resultStats = HtmlEntity.DeEntitize(resultStatsNode.InnerHtml);
 
-                Regex regex = new Regex(@" [0-9,. ]+");
-                Match match = regex.Match(resultStats);
-
-                if (match.Success)
+                var firstNumberIndex = resultStats.IndexOfAny("123456789".ToCharArray());
+                var lastNumberIndex = resultStats.LastIndexOfAny("0123456789".ToCharArray());
+                
+                if (firstNumberIndex >= 0 && lastNumberIndex >= 0 && lastNumberIndex >= firstNumberIndex)
                 {
-                    var numberString = match.Value.Replace(",", "").Replace(".", "").Replace(" ", "");
+                    var match = resultStats.Substring(firstNumberIndex, lastNumberIndex - firstNumberIndex + 1);
+
+                    var numberString = match.Replace(",", string.Empty).Replace(".", string.Empty);
+                    numberString = Regex.Replace(numberString, @"\s+", "");
+
                     var indexedPagesNumber = long.Parse(numberString);
                     
                     indexingData = new IndexingData
@@ -98,14 +122,14 @@ namespace IndexingSEOStats.Actors
                         ProcessingDate = DateTime.Now.Date
                     };
 
-                    var domainStat = new DomainStat { DomainURL = domainUrl, IndexingData = indexingData };
+                    var domainStat = new DomainStat { DomainURL = message.Url, IndexingData = indexingData };
 
                     Sender.Tell(domainStat, Self);
                 }
                 else
                 {
                     var errorMessage = "Match was not successful! Result stats: " + resultStats;
-                    var parsingError = new ParsingError { DomainURL = domainUrl, ErrorMessage = errorMessage };
+                    var parsingError = new ParsingError { DomainURL = message.Url, ErrorMessage = errorMessage };
                     Sender.Tell(parsingError, Self);
                 }              
            

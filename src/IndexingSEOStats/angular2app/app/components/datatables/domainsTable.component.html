@@ -1,9 +1,9 @@
 ﻿<div>
-    <input type='text' style="margin-left: 10px"
-           placeholder='Type to search...'
-           id="input-rounded"
-           [ngModel]='val'
-           (ngModelChange)='updateFilter($event)' />
+        <input type='text' style="margin-left: 10px"
+               placeholder='Type to search...'
+               id="input-rounded"
+               [ngModel]='val'
+               (ngModelChange)='updateFilter($event)' />
 
     <ngx-datatable #domainsTable
                class="material"
@@ -11,7 +11,7 @@
                [columnMode]="'force'"
                [headerHeight]="30"
                [footerHeight]="30"
-               [rowHeight]="30"
+               [rowHeight]="30"o
                [detailRowHeight]="60"
                [scrollbarH]="true"
                [limit]="10">

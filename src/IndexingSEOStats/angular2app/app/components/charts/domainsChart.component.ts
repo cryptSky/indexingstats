@@ -169,22 +169,7 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
         } );
 
                
-        this.chart.addListener('rendered', function(event) {
-          var dataProvider = this.chart.dataSets[0].dataProvider;
-          (<any>$(".amChartsPeriodSelector .amChartsInputField")).datepicker({
-            "dateFormat": "dd-mm-yy",
-            "minDate": dataProvider[0].date,
-            "maxDate": dataProvider[dataProvider.length - 1].date,
-            "onClose": function() {
-              $(".amChartsPeriodSelector .amChartsInputField").trigger('blur');
-            }
-          });
-        });
-        // this.chart.addListener("rendered", this.zoomChart);
-        // this.zoomChart();
-
-        //this.applyRealData();
-    }
+   }
 
     public onDatePicked( event ) {        
        /* if (event.type != 'load') {    

@@ -174,7 +174,8 @@ namespace IndexingSEOStats.Data.Repositories
             var filter = Builders<Domain>.Filter.Where(q => q.Url.Equals(domain.Url));
             var result = Collection.FindOneAndReplace(filter, domain, new FindOneAndReplaceOptions<Domain, Domain>
                 {
-                    ReturnDocument = ReturnDocument.After
+                    ReturnDocument = ReturnDocument.After,
+                    IsUpsert = true
                 }
             );
 

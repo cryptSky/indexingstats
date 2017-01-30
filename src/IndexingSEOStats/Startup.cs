@@ -58,13 +58,17 @@ namespace IndexingSEOStats
 
 #if DEBUG
             Log.Logger = new LoggerConfiguration()
-             .MinimumLevel.Debug()
-             .WriteTo.RollingFile(logPathFormat)
+             .MinimumLevel.Debug().Enrich.FromLogContext().WriteTo
+             .RollingFile(logPathFormat, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] [{SourceContext}] {Message}{NewLine}{Exception}")
              .CreateLogger();
+
+
+
 #else
             Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .WriteTo.RollingFile(logPathFormat).CreateLogger();
+            .MinimumLevel.Information().Enrich.FromLogContext().WriteTo
+            .RollingFile(logPathFormat, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] [{SourceContext}] {Message}{NewLine}{Exception}")
+            .CreateLogger();
 #endif
         }
 
@@ -93,7 +97,6 @@ namespace IndexingSEOStats
 
             services.AddSignalR(options => {
                 options.Hubs.EnableDetailedErrors = true;
-                //options.Hubs.EnableJavaScriptProxies = false;
                 });
 
             var builder = new ContainerBuilder();

@@ -1,32 +1,25 @@
 ﻿
 <form #myForm="ngForm" novalidate (ngSubmit)="save(myForm, myForm.value, myForm.valid)" class="form-vertical">
 
-            <div class="form-group">
-                <div class="col-md-3">
-          
-                    <textarea type="text" [(ngModel)]="domain.url" #url="ngModel" name="url" id="url" required placeholder="Urls - each row is separate url" newLine>
+            <div class="col-md-3 form-group">
+                    
+                    <textarea class="boxsizingBorder" type="text" [(ngModel)]="domain.url" #url="ngModel" name="url" id="url" required placeholder="Urls - each row is separate url" newLine>
                     </textarea>
-                </div>
+               
             </div>
 
-            <div class="form-group">
-                <div class="col-md-3">
-                    <textarea type="text" [(ngModel)]="domain.notes" #notes="ngModel" name="notes" id="notes" placeholder="Notes - each row corresponds to url">
+            <div class="col-md-3 form-group">
+                    <textarea class="boxsizingBorder" type="text" [(ngModel)]="domain.notes" #notes="ngModel" name="notes" id="notes" placeholder="Notes - each row corresponds to url">
                     </textarea>
-                </div>
             </div>
             
-            <div class="form-group">
-                <div class="col-md-3">
-                    <textarea type="text" [(ngModel)]="domain.tags" #tags="ngModel" id="tags" name="tags" placeholder="Tags - each row corresponds to url">
+            <div class="col-md-3 form-group">
+                    <textarea class="boxsizingBorder" type="text" [(ngModel)]="domain.tags" #tags="ngModel" id="tags" name="tags" placeholder="Tags - each row corresponds to url">
                     </textarea>
-                </div>
             </div>
-    <div class="form-group">
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </div>
+    <div class="col-md-3 form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
 
 
 </form>

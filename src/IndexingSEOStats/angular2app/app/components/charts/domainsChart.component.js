@@ -132,20 +132,6 @@ var DomainsChartComponent = (function () {
                 "enabled": true
             }
         });
-        this.chart.addListener('rendered', function (event) {
-            var dataProvider = this.chart.dataSets[0].dataProvider;
-            $(".amChartsPeriodSelector .amChartsInputField").datepicker({
-                "dateFormat": "dd-mm-yy",
-                "minDate": dataProvider[0].date,
-                "maxDate": dataProvider[dataProvider.length - 1].date,
-                "onClose": function () {
-                    $(".amChartsPeriodSelector .amChartsInputField").trigger('blur');
-                }
-            });
-        });
-        // this.chart.addListener("rendered", this.zoomChart);
-        // this.zoomChart();
-        //this.applyRealData();
     };
     DomainsChartComponent.prototype.onDatePicked = function (event) {
         /* if (event.type != 'load') {

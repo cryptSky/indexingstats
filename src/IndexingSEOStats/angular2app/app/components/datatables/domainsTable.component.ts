@@ -101,8 +101,8 @@ export class DomainsTableComponent implements OnInit, OnDestroy {
   cellClass(row: Domain, pdate: Date): string {
     let style = '';
     
-    let prevDate = new Date();
-    prevDate.setDate(pdate.getDate() - 1);
+    let prevDate = new Date(pdate);
+    prevDate.setDate(prevDate.getDate() - 1);
     
     let prevDomainStats = this._datesProvider.getStatForDate(row, prevDate);
     let currentDomainStats = this._datesProvider.getStatForDate(row, pdate);

@@ -73,8 +73,8 @@ var DomainsTableComponent = (function () {
     };
     DomainsTableComponent.prototype.cellClass = function (row, pdate) {
         var style = '';
-        var prevDate = new Date();
-        prevDate.setDate(pdate.getDate() - 1);
+        var prevDate = new Date(pdate);
+        prevDate.setDate(prevDate.getDate() - 1);
         var prevDomainStats = this._datesProvider.getStatForDate(row, prevDate);
         var currentDomainStats = this._datesProvider.getStatForDate(row, pdate);
         if (currentDomainStats != 'N/A' && prevDomainStats != 'N/A') {

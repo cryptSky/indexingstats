@@ -33,8 +33,9 @@ export class SignalRService {
 
         this.startConnection();
 
+        let self = this;
         this.connection.disconnected(function() {
-            let self = this;
+            
             setTimeout(function() {
                 self.startConnection();
             }, 5000); // Restart connection after 5 seconds.

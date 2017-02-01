@@ -23,8 +23,8 @@ var SignalRService = (function () {
         this.proxy = this.connection.createHubProxy(this.proxyName);
         this.registerOnServerEvents();
         this.startConnection();
+        var self = this;
         this.connection.disconnected(function () {
-            var self = this;
             setTimeout(function () {
                 self.startConnection();
             }, 5000); // Restart connection after 5 seconds.

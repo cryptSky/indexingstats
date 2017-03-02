@@ -51,6 +51,11 @@ var DomainsChartComponent = (function () {
             }
         });
     };
+    DomainsChartComponent.prototype.ngOnDestroy = function () {
+        // prevent memory leak when component is destroyed
+        this._domainsSubscription.unsubscribe();
+        this._selectedDomainSubscription.unsubscribe();
+    };
     DomainsChartComponent.prototype.createStockChart = function (data) {
         var dataSets = [];
         for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
@@ -77,15 +82,6 @@ var DomainsChartComponent = (function () {
                             "bulletSize": 4,
                             "lineThickness": 1
                         }],
-                }, {
-                    "title": "Volume",
-                    "percentHeight": 30,
-                    "stockGraphs": [{
-                            "valueField": "volume",
-                            "type": "column",
-                            "showBalloon": false,
-                            "fillAlphas": 1
-                        }]
                 }],
             "chartScrollbarSettings": {
                 "graph": "g1"
@@ -100,6 +96,7 @@ var DomainsChartComponent = (function () {
             },
             "periodSelector": {
                 "position": "left",
+                "width": 250,
                 "periods": [{
                         "period": "DD",
                         "selected": true,
@@ -123,7 +120,8 @@ var DomainsChartComponent = (function () {
                     }],
             },
             "dataSetSelector": {
-                "position": "left"
+                "position": "left",
+                "width": 250
             },
             "export": {
                 "enabled": true
@@ -132,13 +130,6 @@ var DomainsChartComponent = (function () {
                 "enabled": true
             }
         });
-    };
-    DomainsChartComponent.prototype.onDatePicked = function (event) {
-        /* if (event.type != 'load') {
- 
-             let range = new DateRange(event.startDate, event.endDate);
-             this._domainsService.setDateRange(range);
-         }*/
     };
     // generate some random data, quite different range
     DomainsChartComponent.prototype.generateChartData = function () {

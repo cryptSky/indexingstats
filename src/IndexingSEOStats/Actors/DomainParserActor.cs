@@ -53,13 +53,13 @@ namespace IndexingSEOStats.Actors
             // put message back in mailbox for re-processing after restart
             if (message != null)
             {
-                //if (reason.Message.Contains("(403) Forbidden") || reason.Message.Contains("(503)"))
-                //{
-                //    var errorMessage = "Proxy server is not responding!";
-                //    var parsingError = new ParsingError { DomainURL = ((ParserInput)message).Url, ErrorMessage = errorMessage };
-                //    Sender.Tell(parsingError, Self);
-                //}
-                //else
+                if (reason.Message.Contains("(403) Forbidden") || reason.Message.Contains("(503)"))
+                {
+                    var errorMessage = "Proxy server is not responding!";
+                    var parsingError = new ParsingError { DomainURL = ((ParserInput)message).Url, ErrorMessage = errorMessage };
+                    Sender.Tell(parsingError, Self);
+                }
+                else
                 {
                     Self.Tell(message);
                 }

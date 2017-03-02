@@ -22,7 +22,9 @@ var DatesInRangePipe = (function () {
         return result;
     };
     DatesInRangePipe = __decorate([
-        core_1.Pipe({ name: 'datesInRange' }), 
+        core_1.Pipe({
+            name: 'datesInRange'
+        }), 
         __metadata('design:paramtypes', [])
     ], DatesInRangePipe);
     return DatesInRangePipe;

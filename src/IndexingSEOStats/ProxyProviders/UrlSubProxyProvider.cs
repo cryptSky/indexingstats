@@ -9,11 +9,11 @@ namespace IndexingSEOStats.ProxyProviders
 {
     public class UrlSubProxyProvider : IProxyProvider
     {
-        public string UrlSub { get; set; }
+        public virtual string Url { get; set; }
 
         public UrlSubProxyProvider(string urlSub)
         {
-            UrlSub = urlSub;
+            Url = urlSub;
         }
         public WebProxy GetProxy()
         {
@@ -22,7 +22,7 @@ namespace IndexingSEOStats.ProxyProviders
 
         public Uri GetRequestUrl(string url)
         {
-            var urlStr = string.Format(UrlSub, url);
+            var urlStr = string.Format(Url, url);
             return new Uri(urlStr);
         }
     }

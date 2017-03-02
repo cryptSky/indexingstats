@@ -31,6 +31,8 @@ using System.Linq;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using IndexingSEOStats.Utils;
 using System.IO;
+using IndexingSEOStats.Data.Entities;
+using Microsoft.Extensions.Options;
 
 namespace IndexingSEOStats
 {
@@ -86,6 +88,9 @@ namespace IndexingSEOStats
             services.Add(new ServiceDescriptor(typeof(JsonSerializer),
                                            provider => serializer,
                                            ServiceLifetime.Transient));
+
+            services.AddOptions();
+            services.Configure<ProxySettings>(Configuration.GetSection("ProxySettings"));
 
             services.AddCors();
             services.AddMvc()
@@ -164,6 +169,8 @@ namespace IndexingSEOStats
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
+            
+
             ConnectionManager = serviceProvider.GetService<IConnectionManager>();
 
             if (env.IsDevelopment())
@@ -184,13 +191,16 @@ namespace IndexingSEOStats
 
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path.HasValue && null != angularRoutes.FirstOrDefault(
-                    (ar) => context.Request.Path.Value.StartsWith(ar, StringComparison.OrdinalIgnoreCase)))
-                {
-                    context.Request.Path = new PathString("/");
-                }
-
                 await next();
+
+                // If there's no available file and the request doesn't contain an extension, we're probably trying to access a page.
+                // Rewrite request to use app root
+                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+                {
+                    context.Request.Path = "/index.html"; // Put your Angular root page here 
+                    context.Response.StatusCode = 200; // Make sure we update the status code, otherwise it returns 404
+                    await next();
+                }
             });
 
 
@@ -212,17 +222,17 @@ namespace IndexingSEOStats
             var proxyType = Configuration.GetValue<string>("ProxySettings:Type");
             switch (proxyType)
             {
-                case "Hub":
-                    var hubAddress = Configuration.GetValue<string>("ProxySettings:ProxyHub:HubAddress");
+                case "ProxyHub":
+                    var hubAddress = Configuration.GetValue<string>("ProxySettings:Settings:ProxyHub:Url");
                     builder.RegisterInstance<IProxyProvider>(new HubProxyProvider(hubAddress));
                     break;
-                case "Fetcher":
-                    var fetcherApiAddress = Configuration.GetValue<string>("ProxySettings:ProxyFetcher:FetcherAPIUrl");
+                case "ProxyFetcher":
+                    var fetcherApiAddress = Configuration.GetValue<string>("ProxySettings:Settings:ProxyFetcher:Url");
                     builder.RegisterInstance<IProxyProvider>(new FetcherProxyProvider(fetcherApiAddress));
                     break;
-                case "List":
-                    var type = Configuration.GetValue<string>("ProxySettings:ProxyList:Type");
-                    var listUrl = Configuration.GetValue<string>("ProxySettings:ProxyList:Url");
+                case "ProxyList":
+                    var type = Configuration.GetValue<string>("ProxySettings:Settings:ProxyList:Type");
+                    var listUrl = Configuration.GetValue<string>("ProxySettings:Settings:ProxyList:Url");
                     if (type.Equals("Page", StringComparison.InvariantCultureIgnoreCase))
                     {
                         builder.RegisterInstance<IProxyProvider>(
@@ -234,8 +244,8 @@ namespace IndexingSEOStats
                             new ListProxyProvider(listUrl, ListProxyProviderType.ListApiFetcher));
                     }
                     break;
-                case "UrlSub":
-                    var urlStringFormat = Configuration.GetValue<string>("ProxySettings:ProxyUrlSub:UrlSubFormat");
+                case "ProxyUrlSub":
+                    var urlStringFormat = Configuration.GetValue<string>("ProxySettings:Settings:ProxyUrlSub:Url");
                     builder.RegisterInstance<IProxyProvider>(new UrlSubProxyProvider(urlStringFormat));
                     break;
 

@@ -13,34 +13,35 @@ var core_1 = require('@angular/core');
 var domain_service_1 = require('../../services/domain.service');
 var notification_service_1 = require('../../services/notification.service');
 var dates_provider_service_1 = require('../../services/dates-provider.service');
+var domain_interface_1 = require('../../interfaces/domain.interface');
+var bootstrap_1 = require('angular2-modal/plugins/bootstrap');
 var DomainsTableComponent = (function () {
-    function DomainsTableComponent(_domainService, _notificaionService, _datesProvider) {
+    function DomainsTableComponent(_domainService, _notificaionService, _datesProvider, modal) {
         this._domainService = _domainService;
         this._notificaionService = _notificaionService;
         this._datesProvider = _datesProvider;
+        this.modal = modal;
         this._domains = [];
         this._temp = [];
         this._selections = [];
         this.editing = {};
         this.val = '';
+        var day = new Date();
+        day.setDate(day.getDate() - 7);
+        var weekAgo = day;
+        this._dateRange = new domain_interface_1.DateRange(weekAgo);
     }
     DomainsTableComponent.prototype.ngOnInit = function () {
         var _this = this;
         this._domainsSubscription = this._domainService.domains$.subscribe(function (res) {
-            _this._domains.splice(0, _this._domains.length);
-            (_a = _this._domains).push.apply(_a, res);
+            var rows = res.slice();
+            _this._domains = rows;
             _this._temp = res.slice();
-            var _a;
-        });
-        this._datesSubscription = this._domainService.dateRange$.subscribe(function (res) {
-            //this._domainService.getDomainsForDateRange();
-            _this._dateRange = res;
         });
     };
     DomainsTableComponent.prototype.ngOnDestroy = function () {
         // prevent memory leak when component is destroyed
         this._domainsSubscription.unsubscribe();
-        this._datesSubscription.unsubscribe();
     };
     DomainsTableComponent.prototype.updateFilter = function (val) {
         // remove existing
@@ -58,7 +59,7 @@ var DomainsTableComponent = (function () {
         console.log('Selection!', selected);
     };
     DomainsTableComponent.prototype.toggleExpandRow = function (row) {
-        this.table.toggleExpandRow(row);
+        this.table.rowDetail.toggleExpandRow(row);
     };
     DomainsTableComponent.prototype.paged = function (event) {
         clearTimeout(this.timeout);
@@ -92,6 +93,9 @@ var DomainsTableComponent = (function () {
     DomainsTableComponent.prototype.showOnGraph = function (row) {
         this._domainService.selectToDraw(row);
     };
+    DomainsTableComponent.prototype.onSort = function (event) {
+        var ii = 0;
+    };
     DomainsTableComponent.prototype.runNow = function (row) {
         this._domainService.processDomain(row);
     };
@@ -99,7 +103,22 @@ var DomainsTableComponent = (function () {
         this._domainService.pauseDomain(row);
     };
     DomainsTableComponent.prototype.toggleDelete = function (row) {
-        this._domainService.deleteDomain(row);
+        var _this = this;
+        var dialogBodyText = 'Are you sure you wish to delete the domain ' + row.url + ' ?';
+        var deleteDialog = this.modal.confirm()
+            .size('lg')
+            .isBlocking(true)
+            .showClose(true)
+            .keyboard(27)
+            .title('Delete Domain')
+            .body(dialogBodyText)
+            .open()
+            .catch(function (err) { return console.log(err); }) // catch error not related to the result (modal open...)
+            .then(function (dialog) { return dialog.result; }) // dialog has more properties,lets just return the promise for a result. 
+            .then(function (result) {
+            return _this._domainService.deleteDomain(row);
+        }) // if were here ok was clicked.
+            .catch(function (err) { return console.log("Domain deletion canceled by used"); }); // if were here it was cancelled (click or non block click)     
     };
     __decorate([
         core_1.ViewChild('domainsTable'), 
@@ -112,7 +131,7 @@ var DomainsTableComponent = (function () {
             providers: [dates_provider_service_1.DatesProviderService],
             encapsulation: core_1.ViewEncapsulation.None
         }), 
-        __metadata('design:paramtypes', [domain_service_1.DomainService, notification_service_1.NotificationService, dates_provider_service_1.DatesProviderService])
+        __metadata('design:paramtypes', [domain_service_1.DomainService, notification_service_1.NotificationService, dates_provider_service_1.DatesProviderService, bootstrap_1.Modal])
     ], DomainsTableComponent);
     return DomainsTableComponent;
 }());

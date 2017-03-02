@@ -8,6 +8,6 @@ namespace IndexingSEOStats.Interfaces
 {
     public interface IProxyService
     {
-        Proxy GetProxy(IProxyProvider provider);
+        ProxySettings GetProxy(IProxyProvider provider);
     }
 }

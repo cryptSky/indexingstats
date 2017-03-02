@@ -10,14 +10,14 @@ namespace IndexingSEOStats.ProxyProviders
 {
     public class HubProxyProvider : IProxyProvider
     {
-        public string HubUrl { get; set; }
+        public virtual string Url { get; set; }
         public HubProxyProvider(string hubUrl)
         {
-            HubUrl = hubUrl;
+            Url = hubUrl;
         }
         public WebProxy GetProxy()
         {
-            var proxy = new WebProxy(HubUrl);
+            var proxy = new WebProxy(Url);
             return proxy;
         }
 

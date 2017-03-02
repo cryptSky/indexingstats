@@ -9,6 +9,19 @@ namespace IndexingSEOStats.ProxyProviders
 {
     public class NullProxyProvider : IProxyProvider
     {
+        public virtual string Url
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public WebProxy GetProxy()
         {
             return null;

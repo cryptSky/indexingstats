@@ -13,6 +13,12 @@ module.exports = {
         "app": "./angular2App/app/main.ts"
     },
     resolve: {
+        alias: {
+            jquery: "jquery/src/jquery",            
+            'jquery-ui': 'jquery-ui-bundle/jquery-ui',
+            'jquery-ui-css': 'jquery-ui-bundle/jquery-ui.css',
+            'waves': './angular2App/app/plugins/waves.js'
+        },
         extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html']
     },
 
@@ -51,8 +57,8 @@ module.exports = {
                 loader: "file-loader?name=assets/[name]-[hash:6].[ext]"
             },
             {
-			    test: /\.component\.css$/,
-			    loader: 'raw'
+                test: /\.component\.css$/,
+                loader: 'raw'
 			},
 
             {
@@ -92,8 +98,10 @@ module.exports = {
             jQuery: 'jquery',
             $: 'jquery',
             jquery: 'jquery',
+            "window.jQuery":"jquery",
             Tether: 'tether',
-            Waves: 'waves'
+            waves: 'waves',
+            Waves: 'waves',
 
         })
     ],

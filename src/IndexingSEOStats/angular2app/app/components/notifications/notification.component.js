@@ -23,6 +23,10 @@ var NotifiationsComponent = (function () {
             var _a;
         });
     };
+    NotifiationsComponent.prototype.ngOnDestroy = function () {
+        // prevent memory leak when component is destroyed
+        this._domainsSubscription.unsubscribe();
+    };
     NotifiationsComponent.prototype.toggleDelete = function (domain) {
         //this._notificationService.deleteNotification(domain);
         this._deindexedDomains = this._deindexedDomains.filter(function (d) { return d.url != domain.url; });

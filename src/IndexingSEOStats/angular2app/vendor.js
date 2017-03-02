@@ -14,12 +14,19 @@ require("@angular/router");
 // Other vendors for example jQuery, Lodash or Bootstrap
 // You can import js, ts, css, sass, ...
 require('expose?jQuery!jquery');
-require('signalr/jquery.signalR.js');
+require('script!signalr/jquery.signalR.js');
 require("bootstrap/dist/js/bootstrap");
 require("bootstrap/dist/css/bootstrap.min.css");
-require('@swimlane/ngx-datatable/release/datatable.css');
-require('@swimlane/ngx-datatable/release/material.css');
+require('jquery-ui');
+require('jquery-ui-css');
+require('jquery-slimscroll/jquery.slimscroll');
+require('@swimlane/ngx-datatable/release/index.css');
+require('@swimlane/ngx-datatable/release/themes/material.css');
 require('@swimlane/ngx-datatable/release/assets/icons.css');
+require('./app/plugins/menu_cornerbox.css');
+require('script!./app/plugins/waves.js');
+require('script!./app/plugins/classie.js');
+require('script!./app/plugins/modern.js');
 require("amstock3/amcharts/amcharts.js");
 require("amstock3/amcharts/serial.js");
 require("amstock3/amcharts/amstock.js");

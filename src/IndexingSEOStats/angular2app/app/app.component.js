@@ -8,11 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-require('./app.loader');
 var core_1 = require('@angular/core');
 var dashboard_component_1 = require('./components/dashboard/dashboard.component');
+var angular2_modal_1 = require('angular2-modal');
 var AppComponent = (function () {
-    function AppComponent() {
+    function AppComponent(overlay, vcRef) {
+        overlay.defaultViewContainer = vcRef;
     }
     AppComponent = __decorate([
         core_1.NgModule({
@@ -21,9 +22,8 @@ var AppComponent = (function () {
         core_1.Component({
             selector: 'app',
             template: require('./app.component.html'),
-            styles: [require('./app.component.css')],
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [angular2_modal_1.Overlay, core_1.ViewContainerRef])
     ], AppComponent);
     return AppComponent;
 }());

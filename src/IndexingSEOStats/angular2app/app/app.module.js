@@ -16,20 +16,25 @@ var app_routes_1 = require('./app.routes');
 var forms_1 = require('@angular/forms');
 var app_component_1 = require('./app.component');
 var dashboard_component_1 = require('./components/dashboard/dashboard.component');
+var settings_component_1 = require('./components/settings/settings.component');
 var ngx_datatable_1 = require('@swimlane/ngx-datatable');
 var domainsTable_component_1 = require('./components/datatables/domainsTable.component');
 var domainsChart_component_1 = require('./components/charts/domainsChart.component');
 var domain_form_component_1 = require('./components/form/domain-form.component');
 var notification_component_1 = require('./components/notifications/notification.component');
+var stats_component_1 = require('./components/stats/stats.component');
 var domain_statistics_pipe_1 = require('./pipes/domain-statistics.pipe');
 var dates_in_range_pipe_1 = require('./pipes/dates-in-range.pipe');
 var notification_message_pipe_1 = require('./pipes/notification-message.pipe');
 var commas_pipe_1 = require('./pipes/commas.pipe');
 var domain_service_1 = require('./services/domain.service');
+var settings_service_1 = require('./services/settings.service');
 var notification_service_1 = require('./services/notification.service');
 var signalr_service_1 = require('./services/signalr.service');
 var dates_provider_service_1 = require('./services/dates-provider.service');
 var newline_directive_1 = require('./directives/newline.directive');
+var angular2_modal_1 = require('angular2-modal');
+var bootstrap_1 = require('angular2-modal/plugins/bootstrap');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -39,6 +44,8 @@ var AppModule = (function () {
             declarations: [
                 app_component_1.AppComponent,
                 dashboard_component_1.DashboardComponent,
+                settings_component_1.SettingsComponent,
+                stats_component_1.StatsComponent,
                 domainsTable_component_1.DomainsTableComponent,
                 domainsChart_component_1.DomainsChartComponent,
                 domain_form_component_1.DomainFormComponent,
@@ -56,13 +63,16 @@ var AppModule = (function () {
                 http_1.JsonpModule,
                 forms_1.ReactiveFormsModule,
                 forms_1.FormsModule,
-                ngx_datatable_1.NgxDatatableModule
+                ngx_datatable_1.NgxDatatableModule,
+                angular2_modal_1.ModalModule.forRoot(),
+                bootstrap_1.BootstrapModalModule
             ],
             providers: [
                 app_routes_1.appRoutingProviders,
                 app_constants_1.Configuration,
                 signalr_service_1.SignalRService,
                 domain_service_1.DomainService,
+                settings_service_1.SettingsService,
                 notification_service_1.NotificationService,
                 dates_provider_service_1.DatesProviderService
             ],

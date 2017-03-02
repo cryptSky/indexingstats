@@ -42,6 +42,7 @@ var DomainFormComponent = (function () {
                 domain.url = urls[index].trim();
                 domain.tags = tags[index] ? tags[index].trim() : '';
                 domain.notes = notes[index] ? notes[index].trim() : '';
+                //if (!this._domainService.domainExists(domain)) {
                 this._domainService.createDomain(domain);
             }
             form.reset();

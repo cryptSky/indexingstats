@@ -9,7 +9,7 @@ import { DomainService } from '../../services/domain.service';
   selector: 'notifications',
   template: require('./notification.component.html')
 })
-export class NotifiationsComponent implements OnInit {
+export class NotifiationsComponent implements OnInit, OnDestroy {
 
   private _deindexedDomains: Domain[] = [];
   private _domainsSubscription: Subscription;
@@ -25,6 +25,11 @@ export class NotifiationsComponent implements OnInit {
             
         });
   }
+
+  ngOnDestroy() {
+        // prevent memory leak when component is destroyed
+        this._domainsSubscription.unsubscribe();
+    }
 
   toggleDelete(domain) {
     //this._notificationService.deleteNotification(domain);

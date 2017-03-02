@@ -19,7 +19,9 @@ var DomainStatisticsPipe = (function () {
         return result;
     };
     DomainStatisticsPipe = __decorate([
-        core_1.Pipe({ name: 'domainStats' }), 
+        core_1.Pipe({
+            name: 'domainStats'
+        }), 
         __metadata('design:paramtypes', [dates_provider_service_1.DatesProviderService])
     ], DomainStatisticsPipe);
     return DomainStatisticsPipe;

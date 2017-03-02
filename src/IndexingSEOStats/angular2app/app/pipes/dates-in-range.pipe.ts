@@ -1,7 +1,9 @@
 ﻿import { Pipe, PipeTransform } from '@angular/core';
 import { DateRange } from '../interfaces/domain.interface';
 
-@Pipe({name: 'datesInRange'})
+@Pipe({
+name: 'datesInRange'
+})
 export class DatesInRangePipe implements PipeTransform {
 
     transform(dateRange: DateRange): Date[] {

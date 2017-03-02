@@ -31,13 +31,14 @@ var DomainService = (function () {
         this.domainDisableUrl = 'api/domains/pause';
         this.domainsDeindexedUrl = 'api/domains/deindexed';
         this.subscribeToEvents();
-        var day = new Date();
-        day.setDate(day.getDate() - 7);
-        var weekAgo = day;
-        this.dataStore = { domains: [], deindexedDomains: [], dateRange: new domain_interface_1.DateRange(weekAgo), selectedForChart: "", domainToDraw: null };
+        this.dataStore = {
+            domains: [],
+            deindexedDomains: [],
+            selectedForChart: "",
+            domainToDraw: null
+        };
         this._domains$ = new BehaviorSubject_1.BehaviorSubject(this.dataStore.domains);
         this._deindexedDomains$ = new BehaviorSubject_1.BehaviorSubject(this.dataStore.deindexedDomains);
-        this._dateRange$ = new BehaviorSubject_1.BehaviorSubject(this.dataStore.dateRange);
         this._domainToDraw$ = new BehaviorSubject_1.BehaviorSubject(this.dataStore.domainToDraw);
         this._selectedForChart$ = new BehaviorSubject_1.BehaviorSubject(this.dataStore.selectedForChart);
         this.getDomains();
@@ -86,23 +87,19 @@ var DomainService = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(DomainService.prototype, "dateRange$", {
-        get: function () {
-            return this._dateRange$.asObservable();
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(DomainService.prototype, "selectedDomain$", {
+        /*get dateRange$() {
+            return this._dateRange$.asObservable();
+        }*/
         get: function () {
             return this._selectedForChart$.asObservable();
         },
         enumerable: true,
         configurable: true
     });
-    DomainService.prototype.dateRange = function () {
+    /*public dateRange() {
         return this.dataStore.dateRange;
-    };
+    }*/
     DomainService.prototype.selectToDraw = function (domain) {
         this.dataStore.selectedForChart = domain.url;
         this._selectedForChart$.next(this.dataStore.selectedForChart);
@@ -197,52 +194,65 @@ var DomainService = (function () {
             .post(this.domainDeleteUrl, JSON.stringify(domain), { headers: this.headers })
             .map(function (res) { return res; })
             .subscribe(function (res) {
-            _this.dataStore.domains = _this.dataStore.domains.filter(function (d) { return d.url != domain.url; });
+            _this.dataStore.domains = _this.dataStore.domains.filter(function (d) { return d.url !== domain.url; });
             _this._domains$.next(_this.dataStore.domains);
             _this.dataStore.deindexedDomains = _this.dataStore.deindexedDomains.filter(function (d) { return d.url != domain.url; });
             _this._deindexedDomains$.next(_this.dataStore.deindexedDomains);
         }, function (error) { _this.handleError(error); });
     };
-    DomainService.prototype.setDateRange = function (dateRange) {
+    DomainService.prototype.domainExists = function (domain) {
+        var sameDomain = this.dataStore.domains.filter(function (d) {
+            return d.url.replace(/^https?\:\/\//i, "").replace(/\/$/, "") === domain.url.replace(/^https?\:\/\//i, "").replace(/\/$/, "");
+        });
+        if (sameDomain != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    /*public setDateRange(dateRange : DateRange) {
         this.dataStore.dateRange = dateRange;
         this._dateRange$.next(this.dataStore.dateRange);
-    };
-    DomainService.prototype.getDomainsForDateRange = function () {
-        var _this = this;
+    }
+
+    public getDomainsForDateRange() {
         this.http
             .post(this.domainsUrlDateRange, JSON.stringify(this.dataStore.dateRange), { headers: this.headers })
-            .map(function (response) {
-            var res = JSON.parse(response['_body']);
-            var result = new Array();
-            res.forEach(function (item) {
-                var domain = item;
-                result.push(domain);
-            });
-            return result;
-        })
-            .subscribe(function (res) {
-            _this.dataStore.domains = res;
-            _this._domains$.next(_this.dataStore.domains);
-        }, function (error) { _this.handleError(error); });
-    };
-    DomainService.prototype.getGetStatsForPeriod = function (domain, range) {
-        var toSend = JSON.stringify({
-            domain: domain,
-            range: range
+            .map((response) => {
+                let res = JSON.parse(response['_body']);
+                let result = new Array<Domain>();
+                res.forEach((item) => {
+                    let domain = item as Domain;
+                    result.push(domain);
+                });
+                return result;
+            })
+            .subscribe((res: Array<Domain>) => {
+                this.dataStore.domains = res;
+                this._domains$.next(this.dataStore.domains);
+            },
+            error => { this.handleError(error) });
+    }
+
+    public getGetStatsForPeriod(domain: Domain, range: DateRange) : Observable<Array<IndexingData>> {
+        let toSend = JSON.stringify({
+                domain: domain,
+                range: range
         });
         return this.http
             .post(this.domainUrlDateRange, JSON.stringify(this.dataStore.dateRange), { headers: this.headers })
-            .map(function (response) {
-            var res = JSON.parse(response['_body']);
-            var result = new Array();
-            res.forEach(function (item) {
-                var domain = item;
-                result.push(domain);
-            });
-            return result;
-        })
+            .map((response) => {
+                let res = JSON.parse(response['_body']);
+                let result = new Array<Domain>();
+                res.forEach((item) => {
+                    let domain = item as Domain;
+                    result.push(domain);
+                });
+                return result;
+            })
             .catch(this.handleError);
-    };
+    }*/
     DomainService.prototype.handleError = function (error) {
         console.error('An error occurred', error); // for demo purposes only
         return Promise.reject(error.message || error);

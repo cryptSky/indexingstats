@@ -12,14 +12,12 @@ import { SignalRService } from './signalr.service';
 export class DomainService {
     private _domains$;
     private _deindexedDomains$;
-    private _dateRange$;
     private _domainToDraw$; 
     private _selectedForChart$;  
 
     private dataStore: {  // This is where we will store our data in memory
         domains: Domain[],
-        deindexedDomains: Domain[],
-        dateRange: DateRange,        
+        deindexedDomains: Domain[],  
         selectedForChart: string,
         domainToDraw: Domain
     };
@@ -67,15 +65,15 @@ export class DomainService {
                 private _datesProviderService: DatesProviderService ) {
         this.subscribeToEvents();
 
-        let day = new Date();
-        day.setDate(day.getDate() - 7);
-        
-        let weekAgo = day;
-        this.dataStore = { domains: [], deindexedDomains: [], dateRange: new DateRange(weekAgo), selectedForChart: "", domainToDraw: null };
+        this.dataStore = { 
+            domains: [], 
+            deindexedDomains: [],
+            selectedForChart: "", 
+            domainToDraw: null 
+        };
         
         this._domains$ = new BehaviorSubject<Domain[]>(this.dataStore.domains);
         this._deindexedDomains$ = new BehaviorSubject<Domain[]>(this.dataStore.deindexedDomains);
-        this._dateRange$ = new BehaviorSubject<DateRange>(this.dataStore.dateRange);
         this._domainToDraw$ = new BehaviorSubject<Domain>(this.dataStore.domainToDraw);
         this._selectedForChart$ = new BehaviorSubject<string>(this.dataStore.selectedForChart);
 
@@ -95,18 +93,17 @@ export class DomainService {
         return this._domainToDraw$.asObservable();
     }
 
-    get dateRange$() {
+    /*get dateRange$() {
         return this._dateRange$.asObservable();
-    }
-   
+    }*/   
 
     get selectedDomain$() {
         return this._selectedForChart$.asObservable();
     }
 
-    public dateRange() {
+    /*public dateRange() {
         return this.dataStore.dateRange;
-    }
+    }*/
 
     public selectToDraw(domain: Domain) {
         this.dataStore.selectedForChart = domain.url;
@@ -212,7 +209,7 @@ export class DomainService {
             .post(this.domainDeleteUrl, JSON.stringify(domain), { headers: this.headers })
             .map((res) => res)
             .subscribe((res) => {
-                this.dataStore.domains = this.dataStore.domains.filter(d => d.url != domain.url);
+                this.dataStore.domains = this.dataStore.domains.filter(d => d.url !== domain.url);
                 this._domains$.next(this.dataStore.domains);
                 
                 this.dataStore.deindexedDomains = this.dataStore.deindexedDomains.filter(d => d.url != domain.url);
@@ -221,7 +218,18 @@ export class DomainService {
             error => { this.handleError(error) });
     }
 
-    public setDateRange(dateRange : DateRange) {
+    public domainExists(domain: Domain): boolean {
+        
+        let sameDomain = this.dataStore.domains.filter(d => 
+            d.url.replace(/^https?\:\/\//i, "").replace(/\/$/, "") === domain.url.replace(/^https?\:\/\//i, "").replace(/\/$/, ""));
+        if (sameDomain != null) {
+            return true;
+        } else {
+            return false;
+        }    
+    }
+
+    /*public setDateRange(dateRange : DateRange) {
         this.dataStore.dateRange = dateRange;
         this._dateRange$.next(this.dataStore.dateRange);
     }
@@ -262,7 +270,7 @@ export class DomainService {
                 return result;
             })
             .catch(this.handleError);
-    }
+    }*/
 
     private handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only

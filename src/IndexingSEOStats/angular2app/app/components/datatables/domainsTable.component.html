@@ -11,11 +11,12 @@
                [columnMode]="'force'"
                [headerHeight]="30"
                [footerHeight]="30"
-               [rowHeight]="30"o
-               [detailRowHeight]="60"
+               [rowHeight]="30"
                [scrollbarH]="true"
-               [limit]="10">
-        <ngx-datatable-row-detail>
+               [sortType]="'single'"
+               (sort)="onSort($event)"
+               [limit]="100">
+        <ngx-datatable-row-detail [rowHeight]="60" #myDetailRow >
             <template let-row="row" ngx-datatable-row-detail-template>
                 <div>
                     <div *ngIf="row.notes">Notes: {{row.notes}}</div>
@@ -64,6 +65,7 @@
         <ngx-datatable-column name="Domain"
                           [draggable]="false" 
                           [frozenLeft]="true"
+                          [sortable]="false"
                           width="200">
             <template let-row="row" ngx-datatable-cell-template>
                 
@@ -71,8 +73,9 @@
             </template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column *ngFor="let pdate of (_dateRange | datesInRange)" [name]="pdate | date:'dd/MM/yyyy'">
-            <template let-row="row"ngx-datatable-cell-template>
+        <ngx-datatable-column *ngFor="let pdate of (_dateRange | datesInRange)" [name]="pdate | date:'dd/MM/yyyy'" [prop]="pdate | date:'dd_MM_yyyy'" [sortable]="false">
+            
+            <template let-row="row" ngx-datatable-cell-template>
                 <div [ngClass]="cellClass(row, pdate)">
                     <div>{{row | domainStats: pdate}}</div>
                 </div>                

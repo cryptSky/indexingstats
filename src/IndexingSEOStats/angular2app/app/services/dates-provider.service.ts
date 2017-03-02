@@ -27,8 +27,13 @@ export class DatesProviderService {
 
     public getStatForDate(domain: Domain, date: Date): string {
         
-        let indexingData = domain.indexingStats.filter(st => 
-                new Date(new Date(st.processingDate).getTime() + 60000*new Date(st.processingDate).getTimezoneOffset()).getDate() == date.getDate()).pop();
+        let indexingData = domain.indexingStats.filter(st => {
+                let statsDate = new Date(new Date(st.processingDate).getTime() + 60000*new Date(st.processingDate).getTimezoneOffset()); 
+                if (statsDate.getDate() == date.getDate() && statsDate.getMonth() == date.getMonth() 
+                    && statsDate.getFullYear() == date.getFullYear()) {
+                    return true;
+                }
+                return false; }).pop();
         if (indexingData == undefined || indexingData == null) {
             return 'N/A';
         } else {

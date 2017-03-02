@@ -1,12 +1,19 @@
 ﻿
-.datatable {
+.ngx-datatable {
 	text-align: left;
 	width:auto;
 	margin:10px;
     height:auto;
 }
-.datatable.vertical-scroll {
+.ngx-datatable.vertical-scroll {
   height:70vh;
+}
+
+.datatable-body-cell-label {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 .boxsizingBorder {
@@ -35,4 +42,9 @@ textarea {
     overflow-x: auto; /* will make horizontal scroll-bar appear only when needed */
     width: 100%;
     height: 75px;
+}
+
+#currentIP {
+    font-size: 13px;
+    font-weight: normal;
 }

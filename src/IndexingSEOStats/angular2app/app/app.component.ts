@@ -1,6 +1,8 @@
-﻿import './app.loader';
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+﻿import { Component, NgModule, ViewEncapsulation, ViewContainerRef } from '@angular/core';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+
+import { Overlay } from 'angular2-modal';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
 
 @NgModule({
     declarations: [DashboardComponent]
@@ -9,8 +11,13 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 @Component({
     selector: 'app',
     template: require('./app.component.html'),
-    styles: [require('./app.component.css')],
 
 })
 
-export class AppComponent { }
+export class AppComponent { 
+
+  constructor(overlay: Overlay, vcRef: ViewContainerRef) {
+    overlay.defaultViewContainer = vcRef;
+  }
+
+}

@@ -12,6 +12,19 @@ namespace IndexingSEOStats.ProxyProviders
     {
         public string FetcherApiUrl { get; set; }
 
+        public virtual string Url
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public FetcherProxyProvider(string fetcherApiUrl)
         {
             FetcherApiUrl = fetcherApiUrl;

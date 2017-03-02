@@ -1,4 +1,4 @@
-﻿import {Component, AfterViewInit, OnInit, Input, ElementRef, Renderer} from '@angular/core';
+﻿import {Component, AfterViewInit, OnInit, OnDestroy, Input, ElementRef, Renderer} from '@angular/core';
 import { DomainService } from '../../services/domain.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Domain, DateRange, IndexingData } from '../../interfaces/domain.interface';
@@ -11,13 +11,13 @@ declare var $:JQueryStatic;
     styles: [require('./domainsChart.component.css')]
 })
 
-export class DomainsChartComponent implements AfterViewInit, OnInit {
+export class DomainsChartComponent implements AfterViewInit, OnInit, OnDestroy {
 
     constructor(private _elem: ElementRef, private _renderer: Renderer,
                 private _domainsService: DomainService) {
        
     } 
-
+   
     private _domainToDraw: Domain;
 
     private _domains: Domain[] = [];
@@ -70,6 +70,12 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
         });
     }
 
+    ngOnDestroy() {
+        // prevent memory leak when component is destroyed
+        this._domainsSubscription.unsubscribe();
+        this._selectedDomainSubscription.unsubscribe();
+    }
+
     public createStockChart(data: Domain[]) {
 
         let dataSets = []
@@ -101,16 +107,7 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
                     "lineThickness": 1
                 } ],
                 
-            }, {
-                "title": "Volume",
-                "percentHeight": 30,
-                "stockGraphs": [ {
-                    "valueField": "volume",
-                    "type": "column",
-                    "showBalloon": false,
-                    "fillAlphas": 1
-                } ]
-            } ],
+            }],
 
             "chartScrollbarSettings": {
                 "graph": "g1"
@@ -127,6 +124,7 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
 
             "periodSelector": {
                 "position": "left",
+                "width": 250,
                 "periods": [ {
                 
                    "period": "DD",
@@ -156,7 +154,8 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
             },
 
             "dataSetSelector": {
-                "position": "left"
+                "position": "left",
+                "width": 250
             },
 
             "export": {
@@ -171,16 +170,6 @@ export class DomainsChartComponent implements AfterViewInit, OnInit {
                
    }
 
-    public onDatePicked( event ) {        
-       /* if (event.type != 'load') {    
-
-            let range = new DateRange(event.startDate, event.endDate);
-            this._domainsService.setDateRange(range); 
-        }*/
-            
-    }
-    
-    
     // generate some random data, quite different range
     public generateChartData() {
         var initData = new IndexingData(new Date(), 0);

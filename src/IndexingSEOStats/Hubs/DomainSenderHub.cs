@@ -12,6 +12,12 @@ namespace IndexingSEOStats.Hubs
     [HubName("domainstatsender")]
     public class DomainStatSenderHub : Hub
     {
+        public override Task OnConnected()
+        {
+            // Set connection id for just connected client only
+            return Clients.Client(Context.ConnectionId).SetConnectionId(Context.ConnectionId);
+        }
+
         public void SendDomainStat(DomainStat domainStat)
         {
             IHubContext context = Startup.ConnectionManager.GetHubContext<DomainStatSenderHub>();

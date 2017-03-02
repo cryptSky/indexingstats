@@ -4,16 +4,17 @@ import { Router, RouterModule } from '@angular/router';
 import { Domain } from '../../interfaces/domain.interface';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { StatsComponent } from '../stats/stats.component';
-import { SettingsComponent } from '../settings/settings.component';
+import { DomainsTableComponent } from '../datatables/domainsTable.component';
+import { DomainsChartComponent } from '../charts/domainsChart.component';
+import { DomainFormComponent } from '../form/domain-form.component';
 import { NotifiationsComponent } from '../notifications/notification.component';
 
 @Component({
-    selector: 'dashboard',
-    template: require('./dashboard.component.html')
+    selector: 'stats',
+    template: require('./stats.component.html')
 })
 
-export class DashboardComponent implements OnInit, OnDestroy {
+export class StatsComponent implements OnInit, OnDestroy {
     
     constructor() {
         
@@ -26,7 +27,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         
     }
-
-    public isActive: boolean = true;
       
 }

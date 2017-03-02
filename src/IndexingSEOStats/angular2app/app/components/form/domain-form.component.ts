@@ -41,8 +41,10 @@ export class DomainFormComponent implements OnInit {
                 domain.url = urls[index].trim();
                 domain.tags = tags[index] ? tags[index].trim() : '';                
                 domain.notes = notes[index] ? notes[index].trim() : '';
-
-                this._domainService.createDomain(domain);
+                
+                //if (!this._domainService.domainExists(domain)) {
+                    this._domainService.createDomain(domain);
+                //}                
             }
 
             form.reset();

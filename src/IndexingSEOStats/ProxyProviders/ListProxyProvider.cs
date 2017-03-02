@@ -10,17 +10,17 @@ namespace IndexingSEOStats.ProxyProviders
 {
     public class ListProxyProvider : IProxyProvider
     {
-        public string ListUrl { get; set; }
+        public virtual string Url { get; set; }
 
         public ListProxyProvider(string address, ListProxyProviderType type)
         {
             if (type == ListProxyProviderType.ListPageParser)
             {
-                ListUrl = address;
+                Url = address;
             } 
             else
             {
-                ListUrl = address;
+                Url = address;
             }
         }
 

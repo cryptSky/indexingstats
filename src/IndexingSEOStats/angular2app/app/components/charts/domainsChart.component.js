@@ -67,8 +67,36 @@ var DomainsChartComponent = (function () {
             "type": "stock",
             "theme": "light",
             "dataSets": dataSets,
+            "categoryField": "processingDate",
             "panels": [{
-                    "showCategoryAxis": false,
+                    "showCategoryAxis": true,
+                    "categoryAxis": {
+                        "dateFormats": [{
+                                period: 'fff',
+                                format: 'JJ:NN:SS'
+                            }, {
+                                period: 'ss',
+                                format: 'JJ:NN:SS'
+                            }, {
+                                period: 'mm',
+                                format: 'JJ:NN'
+                            }, {
+                                period: 'hh',
+                                format: 'JJ:NN'
+                            }, {
+                                period: 'DD',
+                                format: 'MMM DD'
+                            }, {
+                                period: 'WW',
+                                format: 'MMM DD'
+                            }, {
+                                period: 'MM',
+                                format: 'MMM DD'
+                            }, {
+                                period: 'YYYY',
+                                format: 'YYYY'
+                            }]
+                    },
                     "title": "Value",
                     "percentHeight": 70,
                     "stockGraphs": [{
@@ -76,7 +104,14 @@ var DomainsChartComponent = (function () {
                             "valueField": "value",
                             "comparable": true,
                             "compareField": "value",
-                            "balloonText": "<b>[[value]]</b>",
+                            "balloonFunction": function (graphDataItem, graph) {
+                                console.log(graphDataItem);
+                                var value = graphDataItem.values.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                var category = graphDataItem.category;
+                                var key = AmCharts.formatDate(category, "EEEE, MMM DD, YYYY");
+                                var result = key + "<br>Indexed Pages: " + value;
+                                return result;
+                            },
                             "compareGraphBalloonText": "<b>[[value]]</b>",
                             "bullet": "round",
                             "bulletSize": 4,
@@ -90,8 +125,8 @@ var DomainsChartComponent = (function () {
                 "valueBalloonsEnabled": true,
                 "fullWidth": true,
                 "cursorAlpha": 0.1,
-                "valueLineBalloonEnabled": true,
-                "valueLineEnabled": true,
+                "valueLineBalloonEnabled": false,
+                "valueLineEnabled": false,
                 "valueLineAlpha": 0.5
             },
             "periodSelector": {

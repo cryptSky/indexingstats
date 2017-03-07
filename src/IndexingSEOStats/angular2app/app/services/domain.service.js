@@ -204,7 +204,7 @@ var DomainService = (function () {
         var sameDomain = this.dataStore.domains.filter(function (d) {
             return d.url.replace(/^https?\:\/\//i, "").replace(/\/$/, "") === domain.url.replace(/^https?\:\/\//i, "").replace(/\/$/, "");
         });
-        if (sameDomain != null) {
+        if (sameDomain.length != 0) {
             return true;
         }
         else {

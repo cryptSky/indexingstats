@@ -222,7 +222,7 @@ export class DomainService {
         
         let sameDomain = this.dataStore.domains.filter(d => 
             d.url.replace(/^https?\:\/\//i, "").replace(/\/$/, "") === domain.url.replace(/^https?\:\/\//i, "").replace(/\/$/, ""));
-        if (sameDomain != null) {
+        if (sameDomain.length != 0) {
             return true;
         } else {
             return false;

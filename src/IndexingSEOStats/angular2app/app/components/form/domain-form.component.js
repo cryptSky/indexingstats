@@ -28,22 +28,26 @@ var DomainFormComponent = (function () {
     };
     DomainFormComponent.prototype.save = function (form, formModel, isValid) {
         this.submitted = true; // set form submit to true
+        var tags = [];
+        var notes = [];
         // check if model is valid
         // if valid, call API to save customer
-        var tags = this.domain.tags.split(/[\n]/).filter(function (v) { return v.trim() != ''; });
-        ;
+        if (this.domain.tags != null) {
+            tags = this.domain.tags.split(/[\n]/).filter(function (v) { return v.trim() != ''; });
+        }
+        if (this.domain.notes) {
+            notes = this.domain.notes.split(/[\n]/).filter(function (v) { return v.trim() != ''; });
+        }
         var urls = this.domain.url.split(/[ ,;\n]/).filter(function (v) { return v.trim() != ''; });
-        ;
-        var notes = this.domain.notes.split(/[\n]/).filter(function (v) { return v.trim() != ''; });
-        ;
         if (isValid) {
             for (var index = 0; index < urls.length; index++) {
                 var domain = new domain_interface_1.Domain('', '', '', [], false, false);
                 domain.url = urls[index].trim();
                 domain.tags = tags[index] ? tags[index].trim() : '';
                 domain.notes = notes[index] ? notes[index].trim() : '';
-                //if (!this._domainService.domainExists(domain)) {
-                this._domainService.createDomain(domain);
+                if (!this._domainService.domainExists(domain)) {
+                    this._domainService.createDomain(domain);
+                }
             }
             form.reset();
         }

@@ -6,6 +6,8 @@ declare namespace AmCharts {
 
     function checkEmptyData(param: any): any;
 
+    function formatDate(date: any, format: any): any;
+
     /** Set it to true if you have base href set for your page. This will fix rendering problems in Firefox caused by base href. */
     var baseHref: boolean;
 

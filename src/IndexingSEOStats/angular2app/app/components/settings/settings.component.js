@@ -35,7 +35,8 @@ var SettingsComponent = (function () {
         this._proxyUrlSubscription.unsubscribe();
     };
     SettingsComponent.prototype.setProxyUrl = function (event) {
-        this._settingsService.setProxyUrl(event.value.ip);
+        var ip = event.value.ip.trim();
+        this._settingsService.setProxyUrl(ip);
         event.reset();
     };
     SettingsComponent.prototype.validURL = function (str) {

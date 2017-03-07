@@ -29,11 +29,20 @@ export class DomainFormComponent implements OnInit {
     save(form: any, formModel: any, isValid: boolean) {
         this.submitted = true; // set form submit to true
 
+        let tags = [];
+        let notes = [];
+        
         // check if model is valid
         // if valid, call API to save customer
-        let tags = this.domain.tags.split(/[\n]/).filter(v=> v.trim() != '');;
-        let urls = this.domain.url.split(/[ ,;\n]/).filter(v=> v.trim() != '');;
-        let notes = this.domain.notes.split(/[\n]/).filter(v=> v.trim() != '');;
+        if (this.domain.tags != null) {
+            tags = this.domain.tags.split(/[\n]/).filter(v=> v.trim() != '');
+        }
+        if (this.domain.notes) {
+            notes = this.domain.notes.split(/[\n]/).filter(v=> v.trim() != '');
+        }
+
+        let urls = this.domain.url.split(/[ ,;\n]/).filter(v=> v.trim() != '');
+        
 
         if (isValid) {
             for (var index = 0; index < urls.length; index++) {
@@ -42,13 +51,14 @@ export class DomainFormComponent implements OnInit {
                 domain.tags = tags[index] ? tags[index].trim() : '';                
                 domain.notes = notes[index] ? notes[index].trim() : '';
                 
-                //if (!this._domainService.domainExists(domain)) {
+                if (!this._domainService.domainExists(domain)) {
                     this._domainService.createDomain(domain);
-                //}                
+                }                
             }
 
             form.reset();
         }
+
     }
 
     public options = {

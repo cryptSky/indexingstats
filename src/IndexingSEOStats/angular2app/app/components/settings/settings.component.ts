@@ -45,7 +45,8 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     setProxyUrl(event) {
-       this._settingsService.setProxyUrl(event.value.ip);
+       let ip = event.value.ip.trim();
+       this._settingsService.setProxyUrl(ip);
        event.reset();
     }
 

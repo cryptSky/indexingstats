@@ -109,7 +109,7 @@ var DomainsChartComponent = (function () {
                                 var value = graphDataItem.values.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                                 var category = graphDataItem.category;
                                 var key = AmCharts.formatDate(category, "EEEE, MMM DD, YYYY");
-                                var result = key + "<br>Indexed Pages: " + value;
+                                var result = key + "<br>Indexed Pages: <b>" + value + "</b>";
                                 return result;
                             },
                             "compareGraphBalloonText": "<b>[[value]]</b>",

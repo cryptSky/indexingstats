@@ -132,7 +132,7 @@ export class DomainsChartComponent implements AfterViewInit, OnInit, OnDestroy {
                         var category = graphDataItem.category;
                         var key = AmCharts.formatDate(category, "EEEE, MMM DD, YYYY");
                         
-                        var result = key + "<br>Indexed Pages: " + value;
+                        var result = key + "<br>Indexed Pages: <b>" + value + "</b>";
                         return result;
                     },
                     "compareGraphBalloonText": "<b>[[value]]</b>",
